@@ -17,9 +17,9 @@ import java.util.List;
 @Slf4j
 public class UrlServiceImpl implements UrlService {
 
-    private static final String LONG_URL_SCHEME_HTTP = "http://www.";
+    private static final String LONG_URL_SCHEME_HTTP = "http://";
 
-    private static final String LONG_URL_SCHEME_HTTPS = "https://www.";
+    private static final String LONG_URL_SCHEME_HTTPS = "https://";
 
     private static final String SHORT_URL_SCHEME = "kuz.ia/";
 
