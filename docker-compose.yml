@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: server-image
+    depends_on:
+      - mymongo
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  mymongo:
+    image: mongo:4.4.3
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/mymongo
+    networks:
+      - backend
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+    networks:
+      - backend
+
+volumes:
+  mymongo-data:
+  cache:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
