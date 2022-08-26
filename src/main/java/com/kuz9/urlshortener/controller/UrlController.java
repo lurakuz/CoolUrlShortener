@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Provides API for Url related operations
+ */
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -17,6 +20,11 @@ public class UrlController {
 
     private final UrlService urlService;
 
+    /**
+     * Provides API to get short URL from a long one
+     * @param longUrl to convert to a short one
+     * @return short URL
+     */
     @Cacheable(value = "url")
     @ApiOperation(value = "Convert new url", notes = "Converts long url to short url")
     @PostMapping("create-short")
@@ -27,6 +35,11 @@ public class UrlController {
         return shortUrl;
     }
 
+    /**
+     * Provides API to get long URL from a short one if exist
+     * @param shortUrl to find long one
+     * @return long URL
+     */
     @Cacheable(value = "url")
     @SneakyThrows
     @ApiOperation(value = "Return long Url", notes = "Finds original url from short url")

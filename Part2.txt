@@ -1,0 +1,3 @@
+I would create multiple UrlShortenerServices that would work in the same time and would be connected to the same
+token service. I would use a-z, A-Z, 0-9 characters and the link would be 7 characters long after kuz.ia/
+All services would store data in same database, and it could be working for approximately 10 years.
