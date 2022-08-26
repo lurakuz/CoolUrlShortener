@@ -17,18 +17,22 @@ import java.util.List;
 @Slf4j
 public class UrlServiceImpl implements UrlService {
 
+    private static final String LONG_URL_SCHEME_HTTP = "http://www.";
+
+    private static final String LONG_URL_SCHEME_HTTPS = "https://www.";
+
+    private static final String SHORT_URL_SCHEME = "kuz.ia/";
+
     private final UrlRepository urlRepository;
 
     /**
      * Get or create short URL string if sent URL is correct
      * @param longUrl to get or to create short URL
      * @return shortUrl
-     * @throws UrlValidationException if user sent inappropriate longUrl
      */
     @Override
     public String getShortUrl(String longUrl) {
-        if (!longUrl.startsWith("https://www.") & !longUrl.startsWith("http://www."))
-            throw new UrlValidationException("Pass url to receive short one please!");
+        validateLongUrl(longUrl);
         var url = urlRepository.findByLongUrl(longUrl);
         log.info("Fetched url from db : {}", url);
         if (url.isEmpty())
@@ -44,8 +48,7 @@ public class UrlServiceImpl implements UrlService {
      */
     @Override
     public String getOriginalUrl(String shortUrl) {
-        if (!shortUrl.startsWith("kuz.ia/"))
-            throw new UrlValidationException("Pass short url to receive long one please!");
+        validateShortUrl(shortUrl);
         return urlRepository.findByShortUrl(shortUrl).orElseThrow(() ->
                 new EntityNotFoundException(Url.class, "shortUrl", shortUrl)).getLongUrl();
     }
@@ -75,6 +78,26 @@ public class UrlServiceImpl implements UrlService {
         hash = hash.replace("[", "").replace("]", "")
                 .replace(",", "").replace(" ", "").replace("-", "");
 
-        return "kuz.ia/" + hash;
+        return SHORT_URL_SCHEME + hash;
+    }
+
+    /**
+     * Validation of long URL
+     * @param longUrl to validate
+     * @throws UrlValidationException if user sent inappropriate long URL
+     */
+    private void validateLongUrl(String longUrl){
+        if (!longUrl.startsWith(LONG_URL_SCHEME_HTTP) & !longUrl.startsWith(LONG_URL_SCHEME_HTTPS))
+            throw new UrlValidationException("Pass url to receive short one please!");
+    }
+
+    /**
+     * Validation of short URL
+     * @param shortUrl to validate
+     * @throws UrlValidationException if user sent inappropriate short URL
+     */
+    private void validateShortUrl(String shortUrl){
+        if (!shortUrl.startsWith(SHORT_URL_SCHEME))
+            throw new UrlValidationException("Pass short url to receive long one please!");
     }
 }

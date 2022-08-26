@@ -38,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UrlValidationException.class)
-    protected ResponseEntity<Object> handleFootballManagerValidation(
+    protected ResponseEntity<Object> handleUrlValidation(
             UrlValidationException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
